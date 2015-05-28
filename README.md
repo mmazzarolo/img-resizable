@@ -2,7 +2,7 @@
 
 The `img-resizable` extension gives a resizable property to a standard `img` tag.  
 When dragging the image it will be resized (maintaing aspect ratio) according to the image position.    
-For Polymer 1.0.      
+For Polymer 1.0 (fixin it atm).      
 
 ### Install  
 From bower:    
