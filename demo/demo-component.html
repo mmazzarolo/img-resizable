@@ -1,0 +1,139 @@
+<link rel="import" href="../../polymer/polymer.html">
+
+<link rel="import" href="../img-resizable.html">
+<link rel="import" href="../../paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../../paper-input/paper-input.html">
+<link rel="import" href="../../layout/layout.html">
+
+<link rel="stylesheet" href="../../paper-styles/demo.css">
+<link rel="stylesheet" href="style.css">
+
+<dom-module id='demo-component'>
+
+	<style is="custom-style">
+		:root {
+			--paper-radio-button-unchecked-color: #5a5a5a;
+			--paper-radio-button-unchecked-ink-color: #4285f4;
+			--paper-radio-button-checked-color: #4285f4;
+			--paper-radio-button-checked-ink-color: #5a5a5a;
+
+			--paper-toggle-button-checked-bar-color: #4285f4;
+			--paper-toggle-button-checked-button-color: #4285f4;
+			--paper-toggle-button-checked-ink-color: #4285f4;
+		}
+	</style>
+
+	<template>
+
+	<div class="horizontal center-justified layout">
+
+	<div id="template" class="vertical layout">
+			<h1>&ltimg-resizable&gt</h1>
+
+        <p>An extension of the &ltimg&gt element that allows you to resize the image by dragging the mouse.<br/></p>
+		
+		<div class="attribute">
+			<paper-input 
+	              id="paperInput"
+	              label="Try it yourself, paste here a valid img src." 
+	              floatingLabel="true" 
+	              value="{{url}}" 
+	              on-input="{{submit}}">
+	        </paper-input>   
+        </div>
+
+        <div class="attribute">
+        	<h4>Position</h4>
+        	<paper-radio-group class="blue" selected="{{position}}">
+	        	<paper-radio-button name="left" label="Left">Left: image will be resized dragging to the right.</paper-radio-button>
+	        	<paper-radio-button name="right" label="Right">Right: image will be resized dragging to the left.</paper-radio-button>
+       		</paper-radio-group>
+    	</div>
+
+    	<div class="attribute">
+	    	<h4>Force-min-size</h4>
+	    	<div class="horizontal layout">
+	    		<div class="flex">If true, the image can be resized below the original size.</div>
+	    		<div><paper-toggle-button checked="{{forceMinSize}}"></paper-toggle-button></div>
+	    	</div>
+    	</div>
+
+    	<div class="attribute">
+    		<h4>Restorable</h4>
+	    	<div class="horizontal layout">
+	    		<div class="flex">If true, the image can be restored to the original size with a double tap.</div>
+	    		<div><paper-toggle-button checked="{{restorable}}"></paper-toggle-button></div>
+	    	</div>
+    	</div>
+
+	    <div class="attribute">
+	    	<h4>Change-cursor</h4>
+	    	<div class="horizontal layout">
+	    		<div class="flex">If true, the cursor will change during the resizing of the image.</div>
+	    		<div><paper-toggle-button checked="{{changeCursor}}"></paper-toggle-button></div>
+	    	</div>
+	    </div>
+
+		<div class="separator"></div>
+
+		<div class="horizontal center-justified layout attribute">
+			<p id="code">{{computeText(url, position, forceMinSize, restorable, changeCursor)}}</p>
+		</div>
+
+
+
+		<section id="imgSection">
+			<img 
+			is="img-resizable" 
+			src="{{url}}"
+			position="{{position}}"
+			force-min-size="{{forceMinSize}}"
+			restorable="{{restorable}}"
+			change-cursor="{{changeCursor}}">
+		</section>
+
+		</div>
+		</div>
+	</template>
+</dom-module>
+
+<script>
+	Polymer({
+		is:'demo-component',
+
+		properties: {
+			position: {
+				type: String,
+          		observer: '_positionChanged'
+			}
+		},
+
+		hostAttributes: {
+			url: 'http://i.imgur.com/Nubk9vB.jpg',
+			position: 'left',
+			forceMinSize: false,
+			restorable: false,
+			changeCursor: false
+		},
+
+		computeText: function(url, position, forceMinSize, restorable, changeCursor) {
+			console.log('position', position);
+			var string = '<img is="img-resizable"';
+			string += ' src="' + url + '"';
+			if (position == 'right') { string += ' postion="right"';	}
+			if (forceMinSize) { string += ' forceMinSize';	}
+			if (restorable) { string += ' restorable';	}
+			if (changeCursor) {	string += ' changeCursor';	}
+			string += '>';
+			return string;
+		},
+
+		_positionChanged: function() {
+			console.log('asd');
+			this.$.imgSection.style.textAlign = this.position;
+		}
+
+	});
+</script>

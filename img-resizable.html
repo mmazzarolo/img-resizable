@@ -1,0 +1,232 @@
+<!--
+The `img-resizable` extension gives a resizable property to a standard `img` tag.
+When dragging the image it will be resized (maintaing aspect ratio) according to the image position.  
+
+The following attributes are supported:   
+- `position`: The position of the image relative to the container.
+		One of:  
+			`left`: image will be resized dragging to the right.  
+			`right`: image will be resized dragging to the left.  
+- `forceMinSize`: If true, the image can be resized below the original size.  
+- `restorable`: If true, the image can be restored to the orifinal size with a double tap.
+- `cursor`: If true, the cursor will change during the resizing of the image.
+
+`img-resizable` can be used this way:
+`<img is="img-resizable" src="https:aaa.jpeg" forceMinSize restorable cursor>`
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="img-resizable">
+
+	<style>
+		:host {
+			display: inline-block;
+			overflow: hidden;
+			position: relative;
+		}
+	</style>
+
+	<template>
+		<content></content>
+	</template>
+
+</dom-module>
+<script>
+	Polymer({
+		is: 'img-resizable',
+
+		extends: 'img',
+
+		properties: {
+			/**
+			* The position of the image relative to the container.
+			* One of:
+			* 	`left`: image will be resized dragging to the right.
+			* 	`right`: image will be resized dragging to the left.
+			* 
+			* @attribute position
+			* @type string
+			* @default 'left'
+			*/
+			position: {
+				type: String,
+				value: 'left'
+			},
+			/**
+			* If true, the image can be resized below the original size.
+			*
+			* @attribute forceMinSize
+			* @type boolean
+			* @default false
+			*/
+			forceMinSize: {
+				observer: '_forceMinSizeChanged',
+				type: Boolean,
+				value: false
+			},
+			/**
+			* If true, the image can be restored to the original size with a double tap.
+			*
+			* @attribute restorable
+			* @type boolean
+			* @default false
+			*/
+			restorable: {
+				type: Boolean,
+				value: false
+			},
+			/**
+			* If true, the cursor will change during the resizing of the image.
+			*
+			* @attribute changeCursor
+			* @type boolean
+			* @default false
+			*/
+			changeCursor: {
+				type: Boolean,
+				value: false
+			},
+			_initialWidth: {
+				type: Number,
+				value: 0
+			},
+			_initialHeight: {
+				type: Number,
+				value: 0
+			},
+			_currWidth: {
+				type: Number,
+				value: 0
+			},
+			_currHeight: {
+				type: Number,
+				value: 0
+			},
+			_cursorStyleDefault: {
+				type: String,
+				value: function() {
+					return this.style.cursor;
+				}
+			},
+			_cursorStyle: {
+				type: String,
+				computed: '_computeCursorStyle(position)',
+				value: ''
+			},
+		
+		},
+
+		listeners: {
+			track: '_handleTrack',
+			tap: '_handleTap'
+		},
+		
+		_handleTrack: function(event) {
+			switch(event.detail.state) {
+				case 'start':
+				this._checkInitialWidth();
+				this._currWidth = this.width;
+				this._currHeight = this.height;
+				if (this.changeCursor) { 
+					this.style.cursor = this._cursorStyle; 
+				}
+				break;
+				case 'track':
+				if (event.detail.hover() == this) {
+					this._resizeImage();
+				}
+				break;
+				case 'end':
+				if (this.changeCursor) { 
+					this.style.cursor = this._cursorStyleDefault; 
+				}
+				break;
+			}
+		},
+
+		/**
+		* The core of `img-resizing`. 
+		*/
+		_resizeImage: function() {
+			var currWidth = this._currWidth;
+			var currHeight = this._currHeight;
+			var offsetX = event.detail.ddx;
+			var offsetY = event.detail.ddy;
+			var newWidth;
+			var newHeight;
+
+			if (this.position == 'right') {
+				offsetX = offsetX * -1;
+			}
+
+			if (Math.abs(offsetX) > Math.abs(offsetY)) {
+				newWidth = currWidth + offsetX;
+				newHeight = newWidth * (currHeight / currWidth);
+			} else {
+				newHeight = currHeight + offsetY;
+				newWidth = newHeight * (currWidth / currHeight);
+			}
+
+			if ((newWidth > this._initialWidth && newHeight > this._initialHeight) 
+				|| this.forceMinSize) {
+				this._currWidth = newWidth;
+				this._currHeight = newHeight;
+				this.style.width = newWidth + 'px';
+				this.style.height = newHeight + 'px';		
+			}
+		},
+
+		/**
+		* If `restorable` the image will be restored to the original size with a double tap.
+		*/
+		_handleTap: function(event) {
+			if (this._isEven(event.detail.sourceEvent.detail) && this.restorable) {
+				this._checkInitialWidth();
+				this.style.width = this._initialWidth + 'px';
+				this.style.height = this._initialHeight + 'px';
+			}
+		},
+
+		_isEven: function(num) {
+			if (isNaN(num) == false) {
+				return (num %2 == 1 ?  false : true);
+			} else {
+				return null;
+			}
+		},
+
+		/**
+		* This function store the original w/h of the image. 
+		* !!! The w/h are not available in `ready` / `created` / `attached`
+		*/
+		_checkInitialWidth: function() {
+			if (this._initialWidth == 0 && this._initialHeight == 0) {
+				this._initialWidth = this.width;
+				this._initialHeight = this.height;
+			}
+		},
+
+		/**
+		* Set the cursor style of the dragging animation.
+		*/
+		_computeCursorStyle: function(position) {
+			switch (position) {
+				case 'left':
+				return 'se-resize';
+				case 'right':
+				return 'sw-resize';
+			}
+		},
+
+		/**
+		* Restore the image to the original size if `forceMinSize` changed.
+		*/
+		_forceMinSizeChanged: function(position) {
+			this._checkInitialWidth();
+			this.style.width = this._initialWidth + 'px';
+			this.style.height = this._initialHeight + 'px';
+		}
+	});
+</script>
+

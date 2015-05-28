@@ -1,0 +1,98 @@
+body {
+	color: #222;
+	transition: opacity fadein 0.2s; 
+	-webkit-animation: fadein 0.5s ease-in alternate;
+	-moz-animation: fadein 0.5s ease-in alternate;
+	animation: fadein 0.5s ease-in alternate;
+}
+
+#template {
+	max-width: 582px;
+}
+
+@-webkit-keyframes fadein {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@-moz-keyframes fadein {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes fadein {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+.attribute {
+	margin-bottom: 16px;
+}
+
+paper-radio-button {
+	display: block;
+}
+#code {
+	font-family: "RobotoDraft",Helvetica,Arial,sans-serif;
+	color: #337ab7;
+	border: 1px solid gainsboro;
+	-webkit-animation: fadein 0.5s ease-in alternate ;
+	-moz-animation: fadein 0.5s ease-in alternate ;
+	animation: fadein 0.5s ease-in alternate ;
+	font-weight: bold;
+	padding: 2px;
+}
+
+section {
+	padding: 20px 0;
+}
+
+section > div {
+	padding: 14px;
+	}
+
+	paper-input {
+		width: 70%;
+	}
+
+	#about {
+		margin-top: 35px;
+	}
+
+	#headingJson {
+		margin: 15px;
+		padding: 5px 10px;
+		background-color: #f3f3f3;
+		border: 1px solid #dedede;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		font-size: 14px;
+		cursor: pointer;
+		-webkit-tap-highlight-color: rgba(0,0,0,0);
+		text-align: center;
+	}
+
+	.separator {
+		border: solid #ddd;
+		border-width: 1px 0 0;
+		margin-top: 35px;
+		margin-bottom: 35px;
+	}
+
+
+/*section{
+	background-color: white;
+	display: block;
+	border-radius: 2px;
+	box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24);
+	transition: all 0.3s;
+	-webkit-transition: all 0.3s;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	}*/
+
+	img{
+		border: 1px solid gainsboro;
+		width: 320px;
+	}
