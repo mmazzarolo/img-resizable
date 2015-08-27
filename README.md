@@ -23,7 +23,4 @@ The following attributes are supported:
 - `cursor`: If true, the cursor will change during the resizing of the image.
 
 ### Demo
-<a href="http://mazzarolomatteo.com/polymer/img-resizable-demo/">Demo</a>  
-
-### Contacts
-Email: Mazzarolomatteo@gmail.com
+<a href="http://mazzarolomatteo.com/polymer/img-resizable-demo/">Demo</a>
